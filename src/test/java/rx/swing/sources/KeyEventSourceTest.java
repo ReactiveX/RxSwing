@@ -95,7 +95,7 @@ public class KeyEventSourceTest {
                         .subscribe(action, error, complete);
 
                 InOrder inOrder = inOrder(action);
-                inOrder.verify(action, times(1)).call(
+                inOrder.verify(action, never()).call(
                         Collections.<Integer> emptySet());
                 verify(error, never()).call(Matchers.<Throwable> any());
                 verify(complete, never()).call();
