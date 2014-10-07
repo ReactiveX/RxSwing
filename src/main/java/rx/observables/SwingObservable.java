@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.FocusEvent;
 import java.util.Set;
 
 import javax.swing.AbstractButton;
@@ -33,6 +34,7 @@ import rx.swing.sources.AbstractButtonSource;
 import rx.swing.sources.ComponentEventSource;
 import rx.swing.sources.KeyEventSource;
 import rx.swing.sources.MouseEventSource;
+import rx.swing.sources.FocusEventSource;
 
 /**
  * Allows creating observables from various sources specific to Swing. 
@@ -129,6 +131,17 @@ public enum SwingObservable { ; // no instances
      */
     public static Observable<ComponentEvent> fromComponentEvents(Component component) {
         return ComponentEventSource.fromComponentEventsOf(component);
+    }
+
+    /**
+     * Creates an observable corresponding to focus events.
+     *
+     * @param component
+     *            The component to register the observable for.
+     * @return Observable of focus events.
+     */
+    public static Observable<FocusEvent> fromFocusEvents(Component component) {
+        return FocusEventSource.fromFocusEventsOf(component);
     }
 
     /**
