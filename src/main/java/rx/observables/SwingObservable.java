@@ -18,11 +18,7 @@ package rx.observables;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.FocusEvent;
+import java.awt.event.*;
 import java.util.Set;
 
 import javax.swing.AbstractButton;
@@ -120,6 +116,17 @@ public enum SwingObservable { ; // no instances
      */
     public static Observable<Point> fromRelativeMouseMotion(Component component) {
         return MouseEventSource.fromRelativeMouseMotion(component);
+    }
+
+    /**
+     * Creates an observable corresponding to raw mouse wheel events.
+     *
+     * @param component
+     *            The component to register the observable for.
+     * @return The component to register the observable for.
+     */
+    public static Observable<MouseWheelEvent> fromMouseWheelEvents(Component component) {
+        return MouseEventSource.fromMouseWheelEvents(component);
     }
     
     /**
