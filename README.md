@@ -15,7 +15,7 @@ Learn more about RxJava on the <a href="https://github.com/ReactiveX/RxJava/wiki
 
 ## Binaries
 
-Binaries and dependency information for Maven, Ivy, Gradle and others can be found at [http://search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Cio.reactivex.rxjava-reactive-streams).
+Binaries and dependency information for Maven, Ivy, Gradle and others can be found at [http://search.maven.org](http://search.maven.org/#search%7Cga%7C1%7C%22rxswing%22%20AND%20g%3A%22io.reactivex%22).
 
 Example for Maven:
 
