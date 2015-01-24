@@ -15,8 +15,11 @@
  */
 package rx.observables;
 
+import static rx.swing.sources.ItemEventSource.Predicate.SELECTED;
+
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.ItemSelectable;
 import java.awt.Point;
 import java.awt.event.*;
 import java.util.Set;
@@ -28,9 +31,10 @@ import rx.Observable;
 import rx.functions.Func1;
 import rx.swing.sources.AbstractButtonSource;
 import rx.swing.sources.ComponentEventSource;
+import rx.swing.sources.FocusEventSource;
+import rx.swing.sources.ItemEventSource;
 import rx.swing.sources.KeyEventSource;
 import rx.swing.sources.MouseEventSource;
-import rx.swing.sources.FocusEventSource;
 
 /**
  * Allows creating observables from various sources specific to Swing. 
@@ -162,6 +166,40 @@ public enum SwingObservable { ; // no instances
         return ComponentEventSource.fromResizing(component);
     }
 
+    /**
+     * Creates an observable corresponding to item events.
+     * 
+     * @param component
+     *            The ItemSelectable to register the observable for.
+     * @return Observable emitting the item events for the given itemSelectable.
+     */
+    public static Observable<ItemEvent> fromItemEvents(ItemSelectable itemSelectable) {
+        return ItemEventSource.fromItemEventsOf( itemSelectable );
+    }
+    
+    /**
+     * Creates an observable corresponding to item selection events.
+     * 
+     * @param component
+     *            The ItemSelectable to register the observable for.
+     * @return Observable emitting the an item event whenever the given itemSelectable is selected.
+     */
+    public static Observable<ItemEvent> fromSelectionEvents(ItemSelectable itemSelectable) {
+        return ItemEventSource.fromItemEventsOf( itemSelectable ).filter( SELECTED );
+    }
+    
+    /**
+     * Creates an observable corresponding to item deselection events.
+     * 
+     * @param component
+     *            The ItemSelectable to register the observable for.
+     * @return Observable emitting the an item event whenever the given itemSelectable is deselected.
+     */
+    public static Observable<ItemEvent> fromDeselectionEvents(ItemSelectable itemSelectable) {
+        return ItemEventSource.fromItemEventsOf( itemSelectable ).filter( SELECTED );
+    }
+    
+    
     /**
      * Check if the current thead is the event dispatch thread.
      * 
