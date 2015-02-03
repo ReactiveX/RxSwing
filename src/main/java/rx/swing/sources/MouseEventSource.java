@@ -17,9 +17,7 @@ package rx.swing.sources;
 
 import java.awt.Component;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 
 import rx.Observable;
 import rx.Observable.OnSubscribe;
@@ -103,6 +101,28 @@ public enum MouseEventSource {
                     @Override
                     public void call() {
                         component.removeMouseMotionListener(listener);
+                    }
+                }));
+            }
+        });
+    }
+
+    public static Observable<MouseWheelEvent> fromMouseWheelEvents(final Component component){
+        return Observable.create(new OnSubscribe<MouseWheelEvent>() {
+            @Override
+            public void call(final Subscriber<? super MouseWheelEvent> subscriber) {
+                final MouseWheelListener listener = new MouseWheelListener() {
+                    @Override
+                    public void mouseWheelMoved(MouseWheelEvent event) {
+                        subscriber.onNext(event);
+                    }
+                };
+                component.addMouseWheelListener(listener);
+
+                subscriber.add(SwingSubscriptions.unsubscribeInEventDispatchThread(new Action0() {
+                    @Override
+                    public void call() {
+                        component.removeMouseWheelListener(listener);
                     }
                 }));
             }
