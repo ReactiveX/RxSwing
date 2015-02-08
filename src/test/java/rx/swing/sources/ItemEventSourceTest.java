@@ -20,7 +20,7 @@ import org.mockito.Mockito;
 import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.swing.sources.ItemEventSource.Predicate;
+import rx.observables.SwingObservable;
 
 public class ItemEventSourceTest
 {
@@ -110,8 +110,7 @@ public class ItemEventSourceTest
                 }
 
                 TestButton button = new TestButton();
-                Subscription sub = ItemEventSource.fromItemEventsOf(button)
-                                                  .filter( Predicate.SELECTED )
+                Subscription sub = SwingObservable.fromItemSelectionEvents(button)
                                                   .subscribe(action, error, complete);
 
                 verify(action, never()).call(Matchers.<ItemEvent> any());
@@ -164,8 +163,7 @@ public class ItemEventSourceTest
                 }
 
                 TestButton button = new TestButton();
-                Subscription sub = ItemEventSource.fromItemEventsOf(button)
-                                                  .filter(Predicate.DESELECTED)
+                Subscription sub = SwingObservable.fromItemDeselectionEvents(button)
                                                   .subscribe(action, error, complete);
 
                 verify(action, never()).call(Matchers.<ItemEvent> any());

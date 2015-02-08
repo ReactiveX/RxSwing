@@ -15,13 +15,17 @@
  */
 package rx.observables;
 
-import static rx.swing.sources.ItemEventSource.Predicate.SELECTED;
-
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.ItemSelectable;
 import java.awt.Point;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.util.Set;
 
 import javax.swing.AbstractButton;
@@ -184,8 +188,13 @@ public enum SwingObservable { ; // no instances
      *            The ItemSelectable to register the observable for.
      * @return Observable emitting the an item event whenever the given itemSelectable is selected.
      */
-    public static Observable<ItemEvent> fromSelectionEvents(ItemSelectable itemSelectable) {
-        return ItemEventSource.fromItemEventsOf( itemSelectable ).filter( SELECTED );
+    public static Observable<ItemEvent> fromItemSelectionEvents(ItemSelectable itemSelectable) {
+        return ItemEventSource.fromItemEventsOf(itemSelectable).filter(new Func1<ItemEvent, Boolean>() {
+            @Override
+            public Boolean call(ItemEvent event) {
+                return event.getStateChange() == ItemEvent.SELECTED;
+            }
+        });
     }
     
     /**
@@ -195,8 +204,13 @@ public enum SwingObservable { ; // no instances
      *            The ItemSelectable to register the observable for.
      * @return Observable emitting the an item event whenever the given itemSelectable is deselected.
      */
-    public static Observable<ItemEvent> fromDeselectionEvents(ItemSelectable itemSelectable) {
-        return ItemEventSource.fromItemEventsOf( itemSelectable ).filter( SELECTED );
+    public static Observable<ItemEvent> fromItemDeselectionEvents(ItemSelectable itemSelectable) {
+        return ItemEventSource.fromItemEventsOf(itemSelectable).filter(new Func1<ItemEvent, Boolean>() {
+            @Override
+            public Boolean call(ItemEvent event) {
+                return event.getStateChange() == ItemEvent.DESELECTED;
+            }
+        });
     }
     
     
