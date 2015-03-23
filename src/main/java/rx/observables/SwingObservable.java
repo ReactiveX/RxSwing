@@ -26,6 +26,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.beans.PropertyChangeEvent;
 import java.util.Set;
 
 import javax.swing.AbstractButton;
@@ -39,6 +40,7 @@ import rx.swing.sources.FocusEventSource;
 import rx.swing.sources.ItemEventSource;
 import rx.swing.sources.KeyEventSource;
 import rx.swing.sources.MouseEventSource;
+import rx.swing.sources.PropertyChangeEventSource;
 
 /**
  * Allows creating observables from various sources specific to Swing. 
@@ -173,7 +175,7 @@ public enum SwingObservable { ; // no instances
     /**
      * Creates an observable corresponding to item events.
      * 
-     * @param component
+     * @param itemSelectable
      *            The ItemSelectable to register the observable for.
      * @return Observable emitting the item events for the given itemSelectable.
      */
@@ -184,7 +186,7 @@ public enum SwingObservable { ; // no instances
     /**
      * Creates an observable corresponding to item selection events.
      * 
-     * @param component
+     * @param itemSelectable
      *            The ItemSelectable to register the observable for.
      * @return Observable emitting the an item event whenever the given itemSelectable is selected.
      */
@@ -200,7 +202,7 @@ public enum SwingObservable { ; // no instances
     /**
      * Creates an observable corresponding to item deselection events.
      * 
-     * @param component
+     * @param itemSelectable
      *            The ItemSelectable to register the observable for.
      * @return Observable emitting the an item event whenever the given itemSelectable is deselected.
      */
@@ -213,6 +215,34 @@ public enum SwingObservable { ; // no instances
         });
     }
     
+    /**
+     * Creates an observable corresponding to property change events.
+     * 
+     * @param component
+     *            The component to register the observable for.
+     * @return Observable of property change events for the given component
+     */
+    public static Observable<PropertyChangeEvent> fromPropertyChangeEvents(Component component) {
+        return PropertyChangeEventSource.fromPropertyChangeEventsOf(component);
+    }
+    
+    /**
+     * Creates an observable corresponding to property change events filtered by property name.
+     * 
+     * @param component
+     *            The component to register the observable for.
+     * @param propertyName
+     *            A property name to filter the property events on.
+     * @return Observable of property change events for the given component, filtered by the provided property name
+     */
+    public static Observable<PropertyChangeEvent> fromPropertyChangeEvents(Component component, final String propertyName) {
+        return fromPropertyChangeEvents(component).filter(new Func1<PropertyChangeEvent, Boolean>() {
+            @Override
+            public Boolean call(PropertyChangeEvent event) {
+                return event.getPropertyName().equals(propertyName);
+            }
+        });
+    }
     
     /**
      * Check if the current thead is the event dispatch thread.
