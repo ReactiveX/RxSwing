@@ -140,11 +140,11 @@ public final class SwingSchedulerTest {
         waitForEmptyEventQueue();
 
         inOrder.verify(thirdStepStart, times(1)).call();
-        inOrder.verify(thirdStepEnd, times(1)).call();
         inOrder.verify(secondStepStart, times(1)).call();
-        inOrder.verify(secondStepEnd, times(1)).call();
         inOrder.verify(firstStepStart, times(1)).call();
         inOrder.verify(firstStepEnd, times(1)).call();
+        inOrder.verify(secondStepEnd, times(1)).call();
+        inOrder.verify(thirdStepEnd, times(1)).call();
     }
 
     private static void waitForEmptyEventQueue() throws Exception {

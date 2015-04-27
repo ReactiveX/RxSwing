@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.Timer;
+import javax.swing.*;
 
 import rx.Scheduler;
 import rx.Subscription;
@@ -32,6 +32,10 @@ import rx.subscriptions.Subscriptions;
 /**
  * Executes work on the Swing UI thread.
  * This scheduler should only be used with actions that execute quickly.
+ *
+ * Note that if an action is scheduled without from the Swing UI thread without
+ * a delay from the Swing UI thread, it will not be enqueued on the Swing UI
+ * thread, and will instead be ran immediately.
  */
 public final class SwingScheduler extends Scheduler {
     private static final SwingScheduler INSTANCE = new SwingScheduler();
@@ -108,7 +112,8 @@ public final class SwingScheduler extends Scheduler {
         @Override
         public Subscription schedule(final Action0 action) {
             final BooleanSubscription s = BooleanSubscription.create();
-            EventQueue.invokeLater(new Runnable() {
+
+            final Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
                     if (innerSubscription.isUnsubscribed() || s.isUnsubscribed()) {
@@ -117,7 +122,13 @@ public final class SwingScheduler extends Scheduler {
                     action.call();
                     innerSubscription.remove(s);
                 }
-            });
+            };
+
+            if (SwingUtilities.isEventDispatchThread()){
+                runnable.run();
+            } else {
+                EventQueue.invokeLater(runnable);
+            }
 
             innerSubscription.add(s);
             // wrap for returning so it also removes it from the 'innerSubscription'
