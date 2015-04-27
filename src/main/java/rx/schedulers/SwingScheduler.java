@@ -33,9 +33,10 @@ import rx.subscriptions.Subscriptions;
  * Executes work on the Swing UI thread.
  * This scheduler should only be used with actions that execute quickly.
  *
- * Note that if an action is scheduled without from the Swing UI thread without
- * a delay from the Swing UI thread, it will not be enqueued on the Swing UI
- * thread, and will instead be ran immediately.
+ * If the calling thread is the Swing UI thread, and no delay parameter is
+ * provided, the action will run immediately. Otherwise, if the calling
+ * thread is NOT the Swing UI thread, the action will be deferred until
+ * all pending UI events have been processed.
  */
 public final class SwingScheduler extends Scheduler {
     private static final SwingScheduler INSTANCE = new SwingScheduler();
