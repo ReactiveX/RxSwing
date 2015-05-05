@@ -15,17 +15,17 @@
  */
 package rx.swing.sources;
 
-import java.awt.Component;
-import java.awt.Point;
-import java.awt.event.*;
-
 import rx.Observable;
 import rx.Observable.OnSubscribe;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.functions.Func2;
 import rx.observables.SwingObservable;
-import rx.subscriptions.SwingSubscriptions;
+import rx.schedulers.SwingScheduler;
+import rx.subscriptions.Subscriptions;
+
+import java.awt.*;
+import java.awt.event.*;
 
 public enum MouseEventSource {
     ; // no instances
@@ -66,14 +66,14 @@ public enum MouseEventSource {
                 };
                 component.addMouseListener(listener);
 
-                subscriber.add(SwingSubscriptions.unsubscribeInEventDispatchThread(new Action0() {
+                subscriber.add(Subscriptions.create(new Action0() {
                     @Override
                     public void call() {
                         component.removeMouseListener(listener);
                     }
                 }));
             }
-        });
+        }).subscribeOn(SwingScheduler.getInstance());
     }
 
     /**
@@ -97,14 +97,14 @@ public enum MouseEventSource {
                 };
                 component.addMouseMotionListener(listener);
 
-                subscriber.add(SwingSubscriptions.unsubscribeInEventDispatchThread(new Action0() {
+                subscriber.add(Subscriptions.create(new Action0() {
                     @Override
                     public void call() {
                         component.removeMouseMotionListener(listener);
                     }
                 }));
             }
-        });
+        }).subscribeOn(SwingScheduler.getInstance());
     }
 
     public static Observable<MouseWheelEvent> fromMouseWheelEvents(final Component component){
@@ -119,14 +119,14 @@ public enum MouseEventSource {
                 };
                 component.addMouseWheelListener(listener);
 
-                subscriber.add(SwingSubscriptions.unsubscribeInEventDispatchThread(new Action0() {
+                subscriber.add(Subscriptions.create(new Action0() {
                     @Override
                     public void call() {
                         component.removeMouseWheelListener(listener);
                     }
                 }));
             }
-        });
+        }).subscribeOn(SwingScheduler.getInstance());
     }
 
     /**
@@ -139,7 +139,7 @@ public enum MouseEventSource {
             public Point call(MouseEvent ev1, MouseEvent ev2) {
                 return new Point(ev2.getX() - ev1.getX(), ev2.getY() - ev1.getY());
             }
-        });
+        }).subscribeOn(SwingScheduler.getInstance());
     }
 
 }
