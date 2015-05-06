@@ -21,7 +21,6 @@ import rx.Subscriber;
 import rx.functions.Action0;
 import rx.functions.Func1;
 import rx.functions.Func2;
-import rx.observables.SwingObservable;
 import rx.schedulers.SwingScheduler;
 import rx.subscriptions.Subscriptions;
 
@@ -41,7 +40,6 @@ public enum KeyEventSource { ; // no instances
         return Observable.create(new OnSubscribe<KeyEvent>() {
             @Override
             public void call(final Subscriber<? super KeyEvent> subscriber) {
-                SwingObservable.assertEventDispatchThread();
                 final KeyListener listener = new KeyListener() {
                     @Override
                     public void keyPressed(KeyEvent event) {

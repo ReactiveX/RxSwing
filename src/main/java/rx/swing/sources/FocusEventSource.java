@@ -20,7 +20,6 @@ import rx.Observable.OnSubscribe;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.functions.Func1;
-import rx.observables.SwingObservable;
 import rx.schedulers.SwingScheduler;
 import rx.subscriptions.Subscriptions;
 
@@ -37,7 +36,6 @@ public enum FocusEventSource { ; // no instances
         return Observable.create(new OnSubscribe<FocusEvent>() {
             @Override
             public void call(final Subscriber<? super FocusEvent> subscriber) {
-                SwingObservable.assertEventDispatchThread();
                 final FocusListener listener = new FocusListener() {
 
                     @Override

@@ -19,7 +19,6 @@ import rx.Observable;
 import rx.Observable.OnSubscribe;
 import rx.Subscriber;
 import rx.functions.Action0;
-import rx.observables.SwingObservable;
 import rx.schedulers.SwingScheduler;
 import rx.subscriptions.Subscriptions;
 
@@ -36,7 +35,6 @@ public enum AbstractButtonSource { ; // no instances
         return Observable.create(new OnSubscribe<ActionEvent>() {
             @Override
             public void call(final Subscriber<? super ActionEvent> subscriber) {
-                SwingObservable.assertEventDispatchThread();
                 final ActionListener listener = new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {

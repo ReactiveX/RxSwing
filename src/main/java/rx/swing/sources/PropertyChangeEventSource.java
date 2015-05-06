@@ -19,7 +19,6 @@ import rx.Observable;
 import rx.Observable.OnSubscribe;
 import rx.Subscriber;
 import rx.functions.Action0;
-import rx.observables.SwingObservable;
 import rx.schedulers.SwingScheduler;
 import rx.subscriptions.Subscriptions;
 
@@ -33,7 +32,6 @@ public enum PropertyChangeEventSource { ; // no instances
         return Observable.create(new OnSubscribe<PropertyChangeEvent>() {
             @Override
             public void call(final Subscriber<? super PropertyChangeEvent> subscriber) {
-                SwingObservable.assertEventDispatchThread();
                 final PropertyChangeListener listener = new PropertyChangeListener() {
                     @Override
                     public void propertyChange(PropertyChangeEvent event) {

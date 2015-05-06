@@ -20,7 +20,6 @@ import rx.Observable.OnSubscribe;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.functions.Func2;
-import rx.observables.SwingObservable;
 import rx.schedulers.SwingScheduler;
 import rx.subscriptions.Subscriptions;
 
@@ -37,7 +36,6 @@ public enum MouseEventSource {
         return Observable.create(new OnSubscribe<MouseEvent>() {
             @Override
             public void call(final Subscriber<? super MouseEvent> subscriber) {
-                SwingObservable.assertEventDispatchThread();
                 final MouseListener listener = new MouseListener() {
                     @Override
                     public void mouseClicked(MouseEvent event) {
@@ -83,7 +81,6 @@ public enum MouseEventSource {
         return Observable.create(new OnSubscribe<MouseEvent>() {
             @Override
             public void call(final Subscriber<? super MouseEvent> subscriber) {
-                SwingObservable.assertEventDispatchThread();
                 final MouseMotionListener listener = new MouseMotionListener() {
                     @Override
                     public void mouseDragged(MouseEvent event) {

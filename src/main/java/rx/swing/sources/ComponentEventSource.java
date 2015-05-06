@@ -39,7 +39,6 @@ public enum ComponentEventSource { ; // no instances
         return Observable.create(new OnSubscribe<ComponentEvent>() {
             @Override
             public void call(final Subscriber<? super ComponentEvent> subscriber) {
-                SwingObservable.assertEventDispatchThread();
                 final ComponentListener listener = new ComponentListener() {
                     @Override
                     public void componentHidden(ComponentEvent event) {
