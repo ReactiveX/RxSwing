@@ -46,6 +46,7 @@ public enum ItemEventSource { ; // no instances
                     }
                 }));
             }
-        }).subscribeOn(SwingScheduler.getInstance());
+        }).subscribeOn(SwingScheduler.getInstance())
+                .unsubscribeOn(SwingScheduler.getInstance());
     }
 }

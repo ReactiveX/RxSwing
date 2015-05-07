@@ -71,7 +71,8 @@ public enum MouseEventSource {
                     }
                 }));
             }
-        }).subscribeOn(SwingScheduler.getInstance());
+        }).subscribeOn(SwingScheduler.getInstance())
+                .unsubscribeOn(SwingScheduler.getInstance());
     }
 
     /**
