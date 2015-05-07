@@ -29,11 +29,15 @@ public final class SwingSubscriptions {
     }
 
     /**
+     * @deprecated All RxSwing sources now use subscribeOn to subscribe and unsubscribe on
+     * the Swing thread.
+     *
      * Create an Subscription that always runs <code>unsubscribe</code> in the event dispatch thread.
      * 
      * @param unsubscribe
      * @return an Subscription that always runs <code>unsubscribe</code> in the event dispatch thread.
      */
+    @Deprecated
     public static Subscription unsubscribeInEventDispatchThread(final Action0 unsubscribe) {
         return Subscriptions.create(new Action0() {
             @Override

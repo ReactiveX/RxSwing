@@ -15,20 +15,20 @@
  */
 package rx.swing.sources;
 
-import static rx.swing.sources.ComponentEventSource.Predicate.RESIZED;
-
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-
 import rx.Observable;
 import rx.Observable.OnSubscribe;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.functions.Func1;
 import rx.observables.SwingObservable;
-import rx.subscriptions.SwingSubscriptions;
+import rx.schedulers.SwingScheduler;
+import rx.subscriptions.Subscriptions;
+
+import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+
+import static rx.swing.sources.ComponentEventSource.Predicate.RESIZED;
 
 public enum ComponentEventSource { ; // no instances
 
@@ -39,7 +39,6 @@ public enum ComponentEventSource { ; // no instances
         return Observable.create(new OnSubscribe<ComponentEvent>() {
             @Override
             public void call(final Subscriber<? super ComponentEvent> subscriber) {
-                SwingObservable.assertEventDispatchThread();
                 final ComponentListener listener = new ComponentListener() {
                     @Override
                     public void componentHidden(ComponentEvent event) {
@@ -62,14 +61,14 @@ public enum ComponentEventSource { ; // no instances
                     }
                 };
                 component.addComponentListener(listener);
-                subscriber.add(SwingSubscriptions.unsubscribeInEventDispatchThread(new Action0() {
+                subscriber.add(Subscriptions.create(new Action0() {
                     @Override
                     public void call() {
                         component.removeComponentListener(listener);
                     }
                 }));
             }
-        });
+        }).subscribeOn(SwingScheduler.getInstance());
     }
     
     /**

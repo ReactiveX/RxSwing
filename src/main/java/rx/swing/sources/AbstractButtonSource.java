@@ -15,17 +15,16 @@
  */
 package rx.swing.sources;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.AbstractButton;
-
 import rx.Observable;
 import rx.Observable.OnSubscribe;
 import rx.Subscriber;
 import rx.functions.Action0;
-import rx.observables.SwingObservable;
-import rx.subscriptions.SwingSubscriptions;
+import rx.schedulers.SwingScheduler;
+import rx.subscriptions.Subscriptions;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public enum AbstractButtonSource { ; // no instances
 
@@ -36,7 +35,6 @@ public enum AbstractButtonSource { ; // no instances
         return Observable.create(new OnSubscribe<ActionEvent>() {
             @Override
             public void call(final Subscriber<? super ActionEvent> subscriber) {
-                SwingObservable.assertEventDispatchThread();
                 final ActionListener listener = new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -44,14 +42,14 @@ public enum AbstractButtonSource { ; // no instances
                     }
                 };
                 button.addActionListener(listener);
-                subscriber.add(SwingSubscriptions.unsubscribeInEventDispatchThread(new Action0() {
+                subscriber.add(Subscriptions.create(new Action0() {
                     @Override
                     public void call() {
                         button.removeActionListener(listener);
                     }
                 }));
             }
-        });
+        }).subscribeOn(SwingScheduler.getInstance());
     }
 
 }

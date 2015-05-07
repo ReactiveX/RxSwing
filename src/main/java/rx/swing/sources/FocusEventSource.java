@@ -20,8 +20,8 @@ import rx.Observable.OnSubscribe;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.functions.Func1;
-import rx.observables.SwingObservable;
-import rx.subscriptions.SwingSubscriptions;
+import rx.schedulers.SwingScheduler;
+import rx.subscriptions.Subscriptions;
 
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -36,7 +36,6 @@ public enum FocusEventSource { ; // no instances
         return Observable.create(new OnSubscribe<FocusEvent>() {
             @Override
             public void call(final Subscriber<? super FocusEvent> subscriber) {
-                SwingObservable.assertEventDispatchThread();
                 final FocusListener listener = new FocusListener() {
 
                     @Override
@@ -50,14 +49,14 @@ public enum FocusEventSource { ; // no instances
                     }
                 };
                 component.addFocusListener(listener);
-                subscriber.add(SwingSubscriptions.unsubscribeInEventDispatchThread(new Action0() {
+                subscriber.add(Subscriptions.create(new Action0() {
                     @Override
                     public void call() {
                         component.removeFocusListener(listener);
                     }
                 }));
             }
-        });
+        }).subscribeOn(SwingScheduler.getInstance());
     }
 
     /**

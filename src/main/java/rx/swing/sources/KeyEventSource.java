@@ -15,21 +15,21 @@
  */
 package rx.swing.sources;
 
-import java.awt.Component;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import rx.Observable;
 import rx.Observable.OnSubscribe;
 import rx.Subscriber;
 import rx.functions.Action0;
 import rx.functions.Func1;
 import rx.functions.Func2;
-import rx.observables.SwingObservable;
-import rx.subscriptions.SwingSubscriptions;
+import rx.schedulers.SwingScheduler;
+import rx.subscriptions.Subscriptions;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public enum KeyEventSource { ; // no instances
 
@@ -40,7 +40,6 @@ public enum KeyEventSource { ; // no instances
         return Observable.create(new OnSubscribe<KeyEvent>() {
             @Override
             public void call(final Subscriber<? super KeyEvent> subscriber) {
-                SwingObservable.assertEventDispatchThread();
                 final KeyListener listener = new KeyListener() {
                     @Override
                     public void keyPressed(KeyEvent event) {
@@ -59,14 +58,14 @@ public enum KeyEventSource { ; // no instances
                 };
                 component.addKeyListener(listener);
 
-                subscriber.add(SwingSubscriptions.unsubscribeInEventDispatchThread(new Action0() {
+                subscriber.add(Subscriptions.create(new Action0() {
                     @Override
                     public void call() {
                         component.removeKeyListener(listener);
                     }
                 }));
             }
-        });
+        }).subscribeOn(SwingScheduler.getInstance());
     }
 
     /**
