@@ -23,7 +23,6 @@ import rx.Observable;
 import rx.Observable.OnSubscribe;
 import rx.Subscriber;
 import rx.functions.Action0;
-import rx.observables.SwingObservable;
 import rx.schedulers.SwingScheduler;
 import rx.subscriptions.Subscriptions;
 
@@ -36,7 +35,6 @@ public enum DocumentEventSource { ; // no instances
         return Observable.create(new OnSubscribe<DocumentEvent>() {
             @Override
             public void call(final Subscriber<? super DocumentEvent> subscriber) {
-                SwingObservable.assertEventDispatchThread();
                 final DocumentListener listener = new DocumentListener() {
                     @Override
                     public void insertUpdate(DocumentEvent event) {
