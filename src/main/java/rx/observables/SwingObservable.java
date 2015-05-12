@@ -31,11 +31,14 @@ import java.util.Set;
 
 import javax.swing.AbstractButton;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.text.Document;
 
 import rx.Observable;
 import rx.functions.Func1;
 import rx.swing.sources.AbstractButtonSource;
 import rx.swing.sources.ComponentEventSource;
+import rx.swing.sources.DocumentEventSource;
 import rx.swing.sources.FocusEventSource;
 import rx.swing.sources.ItemEventSource;
 import rx.swing.sources.KeyEventSource;
@@ -243,7 +246,35 @@ public enum SwingObservable { ; // no instances
             }
         });
     }
-    
+
+    /**
+     * Creates an observable corresponding to document events.
+     *
+     * @param document The document to register the observable for.
+     * @return Observable of document events.
+     */
+    public static Observable<DocumentEvent> fromDocumentEvents(Document document) {
+        return DocumentEventSource.fromDocumentEventsOf(document);
+    }
+
+    /**
+     * Creates an observable corresponding to document events restricted to a
+     * set of given event types.
+     *
+     * @param document The document to register the observable for.
+     * @param eventTypes The set of event types for which the observable should
+     * emit document events.
+     * @return Observable of document events.
+     */
+    public static Observable<DocumentEvent> fromDocumentEvents(Document document, final Set<DocumentEvent.EventType> eventTypes) {
+        return fromDocumentEvents(document).filter(new Func1<DocumentEvent, Boolean>() {
+            @Override
+            public Boolean call(DocumentEvent event) {
+                return eventTypes.contains(event.getType());
+            }
+        });
+    }
+
     /**
      * Check if the current thead is the event dispatch thread.
      * 
