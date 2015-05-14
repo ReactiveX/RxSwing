@@ -59,6 +59,7 @@ public enum DocumentEventSource { ; // no instances
                     }
                 }));
             }
-        }).subscribeOn(SwingScheduler.getInstance());
+        }).subscribeOn(SwingScheduler.getInstance())
+                .unsubscribeOn(SwingScheduler.getInstance());
     }
 }
