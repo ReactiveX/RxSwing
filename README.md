@@ -7,11 +7,12 @@ Learn more about RxJava on the <a href="https://github.com/ReactiveX/RxJava/wiki
 <a href='https://travis-ci.org/ReactiveX/RxSwing/builds'><img src='https://travis-ci.org/ReactiveX/RxSwing.svg?branch=0.x'></a>
 
 ## Communication
+RxSwing:
+- [GitHub Issues](https://github.com/ReactiveX/RxSwing/issues)
 
+General RxJava:
 - Google Group: [RxJava](http://groups.google.com/d/forum/rxjava)
 - Twitter: [@RxJava](http://twitter.com/RxJava)
-- [GitHub Issues](https://github.com/ReactiveX/RxJava/issues)
-
 
 ## Binaries
 
