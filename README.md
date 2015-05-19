@@ -23,13 +23,13 @@ Example for Maven:
 <dependency>
     <groupId>io.reactivex</groupId>
     <artifactId>rxswing</artifactId>
-    <version>x.y.z</version>
+    <version>0.24.0</version>
 </dependency>
 ```
 and for Ivy:
 
 ```xml
-<dependency org="io.reactivex" name="rxswing" rev="x.y.z" />
+<dependency org="io.reactivex" name="rxswing" rev="0.24.0" />
 ```
 
 ## Build
