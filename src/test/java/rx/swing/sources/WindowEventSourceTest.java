@@ -29,14 +29,17 @@ import javax.swing.JFrame;
 import static org.mockito.Mockito.*;
 
 public class WindowEventSourceTest {
-    private JFrame owner = new JFrame();
-    private Window window = new Window(owner);
 
     @Test
     public void testObservingWindowEvents() throws Throwable {
+        if (GraphicsEnvironment.isHeadless())
+            return;
         SwingTestHelper.create().runInEventDispatchThread(new Action0() {
             @Override
             public void call() {
+                JFrame owner = new JFrame();
+                Window window = new Window(owner);
+
                 @SuppressWarnings("unchecked")
                 Action1<WindowEvent> action = mock(Action1.class);
                 @SuppressWarnings("unchecked")
@@ -52,14 +55,14 @@ public class WindowEventSourceTest {
                 verify(error, never()).call(Matchers.<Throwable>any());
                 verify(complete, never()).call();
 
-                fireWindowEvent(event);
+                fireWindowEvent(window, event);
                 verify(action, times(1)).call(Matchers.<WindowEvent>any());
 
-                fireWindowEvent(event);
+                fireWindowEvent(window, event);
                 verify(action, times(2)).call(Matchers.<WindowEvent> any());
 
                 sub.unsubscribe();
-                fireWindowEvent(event);
+                fireWindowEvent(window, event);
                 verify(action, times(2)).call(Matchers.<WindowEvent> any());
                 verify(error, never()).call(Matchers.<Throwable> any());
                 verify(complete, never()).call();
@@ -68,9 +71,10 @@ public class WindowEventSourceTest {
         }).awaitTerminal();
     }
 
-    private void fireWindowEvent(WindowEvent event) {
+    private void fireWindowEvent(Window window, WindowEvent event) {
         for (WindowListener listener : window.getWindowListeners()) {
             listener.windowClosed(event);
         }
     }
 }
+
