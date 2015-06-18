@@ -30,7 +30,7 @@ import java.awt.event.WindowListener;
 public enum WindowEventSource { ; // no instances
 
     /**
-     * @see rx.observables.SwingObservable#fromKeyEvents(Component)
+     * @see rx.observables.SwingObservable#fromWindowEvents(Component)
      */
     public static Observable<WindowEvent> fromWindowEventsOf(final Window window) {
         return Observable.create(new OnSubscribe<WindowEvent>() {
