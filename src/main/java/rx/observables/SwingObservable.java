@@ -15,17 +15,8 @@
  */
 package rx.observables;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.ItemSelectable;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.util.Set;
 
@@ -36,14 +27,7 @@ import javax.swing.text.Document;
 
 import rx.Observable;
 import rx.functions.Func1;
-import rx.swing.sources.AbstractButtonSource;
-import rx.swing.sources.ComponentEventSource;
-import rx.swing.sources.DocumentEventSource;
-import rx.swing.sources.FocusEventSource;
-import rx.swing.sources.ItemEventSource;
-import rx.swing.sources.KeyEventSource;
-import rx.swing.sources.MouseEventSource;
-import rx.swing.sources.PropertyChangeEventSource;
+import rx.swing.sources.*;
 
 /**
  * Allows creating observables from various sources specific to Swing. 
@@ -183,7 +167,7 @@ public enum SwingObservable { ; // no instances
      * @return Observable emitting the item events for the given itemSelectable.
      */
     public static Observable<ItemEvent> fromItemEvents(ItemSelectable itemSelectable) {
-        return ItemEventSource.fromItemEventsOf( itemSelectable );
+        return ItemEventSource.fromItemEventsOf(itemSelectable);
     }
     
     /**
@@ -245,6 +229,15 @@ public enum SwingObservable { ; // no instances
                 return event.getPropertyName().equals(propertyName);
             }
         });
+    }
+
+    /**
+     * @param window
+     *      The window to register the observable for
+     * @return Observable of window events for the given window
+     */
+    public static Observable<WindowEvent> fromWindowEventsOf(Window window) {
+        return WindowEventSource.fromWindowEventsOf(window);
     }
 
     /**
