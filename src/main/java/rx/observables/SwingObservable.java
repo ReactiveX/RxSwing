@@ -21,8 +21,10 @@ import java.beans.PropertyChangeEvent;
 import java.util.Set;
 
 import javax.swing.AbstractButton;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.text.Document;
 
 import rx.Observable;
@@ -200,6 +202,20 @@ public enum SwingObservable { ; // no instances
                 return event.getStateChange() == ItemEvent.DESELECTED;
             }
         });
+    }
+
+    /**
+     * Creates an observable corresponding to list selection events (e.g. from a JList or a JTable row / column selection).
+     *
+     * For more info to swing list selection see <a href="https://docs.oracle.com/javase/tutorial/uiswing/events/listselectionlistener.html">
+	 * How to Write a List Selection Listener</a>.
+     *
+     * @param listSelectionModel
+     *            The ListSelectionModel to register the observable for.
+     * @return Observable emitting the list selection events.
+     */
+    public static Observable<ListSelectionEvent> fromListSelectionEvents(ListSelectionModel listSelectionModel) {
+        return ListSelectionEventSource.fromListSelectionEventsOf(listSelectionModel);
     }
     
     /**
