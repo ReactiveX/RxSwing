@@ -15,180 +15,224 @@
  */
 package rx.swing.sources;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
-import org.mockito.Mockito;
 import rx.Subscription;
 import rx.functions.Action0;
-import rx.functions.Action1;
+import rx.observers.TestSubscriber;
 
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JList;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.*;
 
 public class ListSelectionEventSourceTest {
 
-	@Test
-	public void jtableRowSelection_observingSelectionEvents() throws Throwable {
-		SwingTestHelper.create().runInEventDispatchThread(new Action0() {
+    @Test
+    public void jtableRowSelection_observingSelectionEvents() throws Throwable {
+        SwingTestHelper.create().runInEventDispatchThread(new Action0() {
 
-			@Override
-			public void call() {
-				@SuppressWarnings("unchecked")
-				Action1<ListSelectionEvent> action = mock(Action1.class);
-				@SuppressWarnings("unchecked")
-				Action1<Throwable> error = mock(Action1.class);
-				Action0 complete = mock(Action0.class);
+            @Override
+            public void call() {
+                TestSubscriber<ListSelectionEvent> testSubscriber = TestSubscriber.create();
 
-				JTable table = createJTable();
-				table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                JTable table = createJTable();
+                ListSelectionEventSource
+                        .fromListSelectionEventsOf(table.getSelectionModel())
+                        .subscribe(testSubscriber);
 
-				ListSelectionEventSource
-						.fromListSelectionEventsOf(table.getSelectionModel())
-						.subscribe(action, error, complete);
+                testSubscriber.assertNoErrors();
+                testSubscriber.assertNoValues();
 
-				verifyZeroInteractions(action, error, complete);
+                table.getSelectionModel().setSelectionInterval(0, 0);
 
-				table.getSelectionModel().setSelectionInterval(0, 0);
+                testSubscriber.assertNoErrors();
+                testSubscriber.assertValueCount(1);
 
-				verify(action, times(1)).call(Mockito.argThat(listSelectionEventMatcher(table.getSelectionModel(), 0, 0, false)));
-				verifyNoMoreInteractions(action, error, complete);
-			}
-		}).awaitTerminal();
-	}
+                assertListSelectionEventEquals(
+                        new ListSelectionEvent(
+                                table.getSelectionModel(),
+                                0 /* start of region with selection changes */,
+                                0 /* end of region with selection changes */,
+                                false),
+                        testSubscriber.getOnNextEvents().get(0));
 
-	@Test
-	public void jtableColumnSelection_observingSelectionEvents() throws Throwable {
-		SwingTestHelper.create().runInEventDispatchThread(new Action0() {
+                table.getSelectionModel().setSelectionInterval(2, 2);
 
-			@Override
-			public void call() {
-				@SuppressWarnings("unchecked")
-				Action1<ListSelectionEvent> action = mock(Action1.class);
-				@SuppressWarnings("unchecked")
-				Action1<Throwable> error = mock(Action1.class);
-				Action0 complete = mock(Action0.class);
+                testSubscriber.assertNoErrors();
+                testSubscriber.assertValueCount(2);
 
-				JTable table = createJTable();
-				table.getColumnModel().getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+                assertListSelectionEventEquals(
+                        new ListSelectionEvent(
+                                table.getSelectionModel(),
+                                0 /* start of region with selection changes */,
+                                2 /* end of region with selection changes */,
+                                false),
+                        testSubscriber.getOnNextEvents().get(1));
+            }
+        }).awaitTerminal();
+    }
 
-				ListSelectionEventSource
-						.fromListSelectionEventsOf(table.getColumnModel().getSelectionModel())
-						.subscribe(action, error, complete);
+    @Test
+    public void jtableColumnSelection_observingSelectionEvents() throws Throwable {
+        SwingTestHelper.create().runInEventDispatchThread(new Action0() {
 
-				table.getColumnModel().getSelectionModel().setSelectionInterval(0, 0);
+            @Override
+            public void call() {
+                TestSubscriber<ListSelectionEvent> testSubscriber = TestSubscriber.create();
 
-				verify(action, times(1)).call(Mockito.argThat(listSelectionEventMatcher(table.getColumnModel().getSelectionModel(), 0, 0, false)));
-				verifyNoMoreInteractions(action, error, complete);
-			}
-		}).awaitTerminal();
-	}
+                JTable table = createJTable();
+                table.getColumnModel().getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
-	@Test
-	public void jlistSelection_observingSelectionEvents() throws Throwable {
-		SwingTestHelper.create().runInEventDispatchThread(new Action0() {
+                ListSelectionEventSource
+                        .fromListSelectionEventsOf(table.getColumnModel().getSelectionModel())
+                        .subscribe(testSubscriber);
 
-			@Override
-			public void call() {
-				@SuppressWarnings("unchecked")
-				Action1<ListSelectionEvent> action = mock(Action1.class);
-				@SuppressWarnings("unchecked")
-				Action1<Throwable> error = mock(Action1.class);
-				Action0 complete = mock(Action0.class);
+                testSubscriber.assertNoErrors();
+                testSubscriber.assertNoValues();
 
-				JList<String> jList = new JList<String>(new String[] {"a", "b", "c", "d", "e", "f"});
-				jList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                table.getColumnModel().getSelectionModel().setSelectionInterval(0, 0);
 
-				ListSelectionEventSource
-						.fromListSelectionEventsOf(jList.getSelectionModel())
-						.subscribe(action, error, complete);
+                testSubscriber.assertNoErrors();
+                testSubscriber.assertValueCount(1);
 
-				verifyZeroInteractions(action, error, complete);
+                assertListSelectionEventEquals(
+                        new ListSelectionEvent(
+                                table.getColumnModel().getSelectionModel(),
+                                0 /* start of region with selection changes */,
+                                0 /* end of region with selection changes */,
+                                false),
+                        testSubscriber.getOnNextEvents().get(0));
 
-				jList.getSelectionModel().setSelectionInterval(0, 0);
+                table.getColumnModel().getSelectionModel().setSelectionInterval(2, 2);
 
-				verify(action, times(1)).call(Mockito.argThat(listSelectionEventMatcher(jList.getSelectionModel(), 0, 0, false)));
-				verifyNoMoreInteractions(action, error, complete);
-			}
-		}).awaitTerminal();
-	}
+                testSubscriber.assertNoErrors();
+                testSubscriber.assertValueCount(2);
 
-	@Test
-	public void jtableRowSelection_unsubscribe_removesRowSelectionListener() throws Throwable {
-		SwingTestHelper.create().runInEventDispatchThread(new Action0() {
+                assertListSelectionEventEquals(
+                        new ListSelectionEvent(
+                                table.getColumnModel().getSelectionModel(),
+                                0 /* start of region with selection changes */,
+                                2 /* end of region with selection changes */,
+                                false),
+                        testSubscriber.getOnNextEvents().get(1));
 
-			@Override
-			public void call() {
-				@SuppressWarnings("unchecked")
-				Action1<ListSelectionEvent> action = mock(Action1.class);
-				@SuppressWarnings("unchecked")
-				Action1<Throwable> error = mock(Action1.class);
-				Action0 complete = mock(Action0.class);
+            }
+        }).awaitTerminal();
+    }
 
-				JTable table = createJTable();
-				int numberOfListenersBefore = getNumberOfRowListSelectionListeners(table);
+    @Test
+    public void jlistSelection_observingSelectionEvents() throws Throwable {
+        SwingTestHelper.create().runInEventDispatchThread(new Action0() {
 
-				Subscription sub = ListSelectionEventSource
-						.fromListSelectionEventsOf(table.getSelectionModel())
-						.subscribe(action, error, complete);
+            @Override
+            public void call() {
+                TestSubscriber<ListSelectionEvent> testSubscriber = TestSubscriber.create();
 
-				sub.unsubscribe();
+                JList<String> jList = new JList<String>(new String[]{"a", "b", "c", "d", "e", "f"});
+                jList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-				table.getSelectionModel().setSelectionInterval(0, 0);
+                ListSelectionEventSource
+                        .fromListSelectionEventsOf(jList.getSelectionModel())
+                        .subscribe(testSubscriber);
 
-				verifyZeroInteractions(action, error, complete);
+                testSubscriber.assertNoErrors();
+                testSubscriber.assertNoValues();
 
-				assertEquals(numberOfListenersBefore, getNumberOfRowListSelectionListeners(table));
-			}
-		}).awaitTerminal();
-	}
+                jList.getSelectionModel().setSelectionInterval(0, 0);
 
-	private static int getNumberOfRowListSelectionListeners(final JTable table) {
-		return ((DefaultListSelectionModel) table.getSelectionModel()).getListSelectionListeners().length;
-	}
+                testSubscriber.assertNoErrors();
+                testSubscriber.assertValueCount(1);
 
-	private static JTable createJTable() {
-		return new JTable(new Object[][]{
-				{"A1", "B1", "C1"},
-				{"A2", "B2", "C2"},
-				{"A3", "B3", "C3"},
-		},
-				new String[]{
-						"A", "B", "C"
-				});
-	}
+                assertListSelectionEventEquals(
+                        new ListSelectionEvent(
+                                jList.getSelectionModel(),
+                                0 /* start of region with selection changes */,
+                                0 /* end of region with selection changes */,
+                                false),
+                        testSubscriber.getOnNextEvents().get(0));
 
-	private static Matcher<ListSelectionEvent> listSelectionEventMatcher(final Object source,
-																		 final int firstIndex,
-																		 final int lastIndex,
-																		 final boolean isAdjusting) {
-		return new ArgumentMatcher<ListSelectionEvent>() {
-			@Override
-			public boolean matches(Object argument) {
-				if (argument.getClass() != ListSelectionEvent.class)
-					return false;
+                jList.getSelectionModel().setSelectionInterval(2, 2);
 
-				final ListSelectionEvent listSelectionEvent = (ListSelectionEvent) argument;
-				return (listSelectionEvent.getSource() == source)
-						&& (listSelectionEvent.getFirstIndex() == firstIndex)
-						&& (listSelectionEvent.getLastIndex() == lastIndex)
-						&& (listSelectionEvent.getValueIsAdjusting() == isAdjusting);
-			}
+                testSubscriber.assertNoErrors();
+                testSubscriber.assertValueCount(2);
 
-			@Override
-			public void describeTo(final Description description) {
-				description.appendText("source=" + source);
-				description.appendText(" firstIndex=" + firstIndex);
-				description.appendText(" lastIndex=" + lastIndex);
-				description.appendText(" isAdjusting=" + isAdjusting);
-			}
-		};
-	}
+                assertListSelectionEventEquals(
+                        new ListSelectionEvent(
+                                jList.getSelectionModel(),
+                                0 /* start of region with selection changes */,
+                                2 /* end of region with selection changes */,
+                                false),
+                        testSubscriber.getOnNextEvents().get(1));
+            }
+        }).awaitTerminal();
+    }
+
+    @Test
+    public void jtableRowSelection_unsubscribe_removesRowSelectionListener() throws Throwable {
+        SwingTestHelper.create().runInEventDispatchThread(new Action0() {
+
+            @Override
+            public void call() {
+                TestSubscriber<ListSelectionEvent> testSubscriber = TestSubscriber.create();
+
+                JTable table = createJTable();
+                int numberOfListenersBefore = getNumberOfRowListSelectionListeners(table);
+
+                Subscription sub = ListSelectionEventSource
+                        .fromListSelectionEventsOf(table.getSelectionModel())
+                        .subscribe(testSubscriber);
+
+                testSubscriber.assertNoErrors();
+                testSubscriber.assertNoValues();
+
+                sub.unsubscribe();
+
+                testSubscriber.assertUnsubscribed();
+
+                table.getSelectionModel().setSelectionInterval(0, 0);
+
+                testSubscriber.assertNoErrors();
+                testSubscriber.assertNoValues();
+
+                assertEquals(numberOfListenersBefore, getNumberOfRowListSelectionListeners(table));
+            }
+        }).awaitTerminal();
+    }
+
+    private static int getNumberOfRowListSelectionListeners(final JTable table) {
+        return ((DefaultListSelectionModel) table.getSelectionModel()).getListSelectionListeners().length;
+    }
+
+    private static JTable createJTable() {
+        return new JTable(new Object[][]{
+                {"A1", "B1", "C1"},
+                {"A2", "B2", "C2"},
+                {"A3", "B3", "C3"},
+        },
+                new String[]{
+                        "A", "B", "C"
+                });
+    }
+
+    private static void assertListSelectionEventEquals(ListSelectionEvent expected, ListSelectionEvent actual) {
+        if (expected == null) {
+            throw new IllegalArgumentException("missing expected");
+        }
+
+        if (actual == null) {
+            throw new AssertionError("Expected " + expected + ", but was: " + actual);
+        }
+        if (!expected.getSource().equals(actual.getSource())) {
+            throw new AssertionError("Expected " + expected + ", but was: " + actual + ". Different source.");
+        }
+        if (expected.getFirstIndex() != actual.getFirstIndex()) {
+            throw new AssertionError("Expected " + expected + ", but was: " + actual + ". Different first index.");
+        }
+        if (expected.getLastIndex() != actual.getLastIndex()) {
+            throw new AssertionError("Expected " + expected + ", but was: " + actual + ". Different last index.");
+        }
+        if (expected.getValueIsAdjusting() != actual.getValueIsAdjusting()) {
+            throw new AssertionError("Expected " + expected + ", but was: " + actual + ". Different ValueIsAdjusting.");
+        }
+    }
 }
