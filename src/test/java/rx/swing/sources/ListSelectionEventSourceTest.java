@@ -28,7 +28,7 @@ import static junit.framework.Assert.assertEquals;
 public class ListSelectionEventSourceTest {
 
     @Test
-    public void jtableRowSelection_observingSelectionEvents() throws Throwable {
+    public void jtableRowSelectionObservingSelectionEvents() throws Throwable {
         SwingTestHelper.create().runInEventDispatchThread(new Action0() {
 
             @Override
@@ -73,7 +73,7 @@ public class ListSelectionEventSourceTest {
     }
 
     @Test
-    public void jtableColumnSelection_observingSelectionEvents() throws Throwable {
+    public void jtableColumnSelectionObservingSelectionEvents() throws Throwable {
         SwingTestHelper.create().runInEventDispatchThread(new Action0() {
 
             @Override
@@ -121,7 +121,7 @@ public class ListSelectionEventSourceTest {
     }
 
     @Test
-    public void jlistSelection_observingSelectionEvents() throws Throwable {
+    public void jlistSelectionObservingSelectionEvents() throws Throwable {
         SwingTestHelper.create().runInEventDispatchThread(new Action0() {
 
             @Override
@@ -168,7 +168,7 @@ public class ListSelectionEventSourceTest {
     }
 
     @Test
-    public void jtableRowSelection_unsubscribe_removesRowSelectionListener() throws Throwable {
+    public void jtableRowSelectionUnsubscribeRemovesRowSelectionListener() throws Throwable {
         SwingTestHelper.create().runInEventDispatchThread(new Action0() {
 
             @Override
