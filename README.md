@@ -47,6 +47,10 @@ $ ./gradlew build
 
 For bugs, questions and discussions please use the [Github Issues](https://github.com/ReactiveX/RxSwing/issues).
 
+## Learning Resources:
+
+Architecture tutorial and examples from @Petikoch: https://github.com/Petikoch/Java_MVVM_with_Swing_and_RxJava_Examples
+
  
 ## LICENSE
 
