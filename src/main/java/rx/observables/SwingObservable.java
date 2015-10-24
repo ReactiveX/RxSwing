@@ -20,9 +20,9 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.util.Set;
 
-import javax.swing.AbstractButton;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
+import javax.swing.colorchooser.ColorSelectionModel;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.text.Document;
@@ -282,6 +282,148 @@ public enum SwingObservable { ; // no instances
                 return eventTypes.contains(event.getType());
             }
         });
+    }
+
+    /**
+     * Creates an observable corresponding to change events (e.g. tab selection).
+     * <p/>
+     * For more info to change listeners and events see <a href="https://docs.oracle.com/javase/tutorial/uiswing/events/changelistener.html">
+     * How to Write a Change Listener</a>.
+     *
+     * @param component
+     * 		The component to register the observable for.
+     * @return Observable emitting the change events.
+     */
+    public static Observable<ChangeEvent> fromChangeEvents(JTabbedPane component) {
+        return ChangeEventSource.fromChangeEventsOf(component);
+    }
+
+    /**
+     * Creates an observable corresponding to change events (e.g. value changes).
+     * <p/>
+     * For more info to change listeners and events see <a href="https://docs.oracle.com/javase/tutorial/uiswing/events/changelistener.html">
+     * How to Write a Change Listener</a>.
+     *
+     * @param component
+     * 		The component to register the observable for.
+     * @return Observable emitting the change events.
+     */
+    public static Observable<ChangeEvent> fromChangeEvents(JSlider component) {
+        return ChangeEventSource.fromChangeEventsOf(component);
+    }
+
+    /**
+     * Creates an observable corresponding to change events (e.g. value changes).
+     * <p/>
+     * For more info to change listeners and events see <a href="https://docs.oracle.com/javase/tutorial/uiswing/events/changelistener.html">
+     * How to Write a Change Listener</a> and <a href="https://docs.oracle.com/javase/tutorial/uiswing/components/spinner.html#change">
+     * How to Use Spinners</a>.
+     *
+     * @param component
+     * 		The component to register the observable for.
+     * @return Observable emitting the change events.
+     */
+    public static Observable<ChangeEvent> fromChangeEvents(JSpinner component) {
+        return ChangeEventSource.fromChangeEventsOf(component);
+    }
+
+    /**
+     * Creates an observable corresponding to change events (e.g. value changes).
+     * <p/>
+     * For more info to change listeners and events see <a href="https://docs.oracle.com/javase/tutorial/uiswing/events/changelistener.html">
+     * How to Write a Change Listener</a> and <a href="https://docs.oracle.com/javase/tutorial/uiswing/components/spinner.html#change">
+     * How to Use Spinners</a>.
+     *
+     * @param spinnerModel
+     * 		The spinnerModel to register the observable for.
+     * @return Observable emitting the change events.
+     */
+    public static Observable<ChangeEvent> fromChangeEvents(SpinnerModel spinnerModel) {
+        return ChangeEventSource.fromChangeEventsOf(spinnerModel);
+    }
+
+    /**
+     * Creates an observable corresponding to change events (e.g. button clicks changes).
+     * <p/>
+     * For more info to change listeners and events see <a href="https://docs.oracle.com/javase/tutorial/uiswing/events/changelistener.html">
+     * How to Write a Change Listener</a>.
+     *
+     * @param component
+     * 		The component to register the observable for.
+     * @return Observable emitting the change events.
+     */
+    public static Observable<ChangeEvent> fromChangeEvents(AbstractButton component) {
+        return ChangeEventSource.fromChangeEventsOf(component);
+    }
+
+    /**
+     * Creates an observable corresponding to change events (e.g. button clicks changes).
+     * <p/>
+     * For more info to change listeners and events see <a href="https://docs.oracle.com/javase/tutorial/uiswing/events/changelistener.html">
+     * How to Write a Change Listener</a>.
+     *
+     * @param buttonModel
+     * 		The buttonModel to register the observable for.
+     * @return Observable emitting the change events.
+     */
+    public static Observable<ChangeEvent> fromChangeEvents(ButtonModel buttonModel) {
+        return ChangeEventSource.fromChangeEventsOf(buttonModel);
+    }
+
+    /**
+     * Creates an observable corresponding to change events (e.g. scrolling).
+     * <p/>
+     * For more info to change listeners and events see <a href="https://docs.oracle.com/javase/tutorial/uiswing/events/changelistener.html">
+     * How to Write a Change Listener</a>.
+     *
+     * @param component
+     * 		The component to register the observable for.
+     * @return Observable emitting the change events.
+     */
+    public static Observable<ChangeEvent> fromChangeEvents(JViewport component) {
+        return ChangeEventSource.fromChangeEventsOf(component);
+    }
+
+    /**
+     * Creates an observable corresponding to change events (e.g. from a color chooser).
+     * <p/>
+     * For more info to change listeners and events see <a href="https://docs.oracle.com/javase/tutorial/uiswing/events/changelistener.html">
+     * How to Write a Change Listener</a>.
+     *
+     * @param colorSelectionModel
+     * 		The colorSelectionModel to register the observable for.
+     * @return Observable emitting the change events.
+     */
+    public static Observable<ChangeEvent> fromChangeEvents(ColorSelectionModel colorSelectionModel) {
+        return ChangeEventSource.fromChangeEventsOf(colorSelectionModel);
+    }
+
+    /**
+     * Creates an observable corresponding to change events (e.g. progressbar value changes).
+     * <p/>
+     * For more info to change listeners and events see <a href="https://docs.oracle.com/javase/tutorial/uiswing/events/changelistener.html">
+     * How to Write a Change Listener</a>.
+     *
+     * @param component
+     * 		The component to register the observable for.
+     * @return Observable emitting the change events.
+     */
+    public static Observable<ChangeEvent> fromChangeEvents(JProgressBar component) {
+        return ChangeEventSource.fromChangeEventsOf(component);
+    }
+
+    /**
+     * Creates an observable corresponding to change events (e.g. progressbar value changes).
+     * <p/>
+     * For more info to change listeners and events see <a href="https://docs.oracle.com/javase/tutorial/uiswing/events/changelistener.html">
+     * How to Write a Change Listener</a>.
+     *
+     * @param boundedRangeModel
+     * 		The boundedRangeModel to register the observable for.
+     * @return Observable emitting the change events.
+     */
+    public static Observable<ChangeEvent> fromChangeEvents(BoundedRangeModel boundedRangeModel) {
+        return ChangeEventSource.fromChangeEventsOf(boundedRangeModel);
     }
 
     /**
