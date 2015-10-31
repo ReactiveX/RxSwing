@@ -427,6 +427,17 @@ public enum SwingObservable { ; // no instances
     }
 
     /**
+     * Creates an observable corresponding to container events (e.g. component added).
+     *
+     * @param container
+     *      The container to register the observable for.
+     * @return Observable emitting the container events.
+     */
+    public static Observable<ContainerEvent> fromContainerEvents(Container container) {
+        return ContainerEventSource.fromContainerEventsOf(container);
+    }
+
+    /**
      * Check if the current thead is the event dispatch thread.
      * 
      * @throws IllegalStateException if the current thread is not the event dispatch thread.
