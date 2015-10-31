@@ -438,6 +438,17 @@ public enum SwingObservable { ; // no instances
     }
 
     /**
+     * Creates an observable corresponding to hierarchy events (e.g. parent added).
+     *
+     * @param component
+     * 		The {@link Component} to register the observable for.
+     * @return Observable emitting hierarchy events for the provided component.
+     */
+    public static Observable<HierarchyEvent> fromHierachyEvents(Component component) {
+        return HierarchyEventSource.fromHierarchyEventsOf(component);
+    }
+
+    /**
      * Check if the current thead is the event dispatch thread.
      * 
      * @throws IllegalStateException if the current thread is not the event dispatch thread.
