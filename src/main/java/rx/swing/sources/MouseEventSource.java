@@ -102,7 +102,8 @@ public enum MouseEventSource {
                     }
                 }));
             }
-        }).subscribeOn(SwingScheduler.getInstance());
+        }).subscribeOn(SwingScheduler.getInstance())
+                .unsubscribeOn(SwingScheduler.getInstance());
     }
 
     public static Observable<MouseWheelEvent> fromMouseWheelEvents(final Component component){
@@ -124,7 +125,8 @@ public enum MouseEventSource {
                     }
                 }));
             }
-        }).subscribeOn(SwingScheduler.getInstance());
+        }).subscribeOn(SwingScheduler.getInstance())
+                .unsubscribeOn(SwingScheduler.getInstance());
     }
 
     /**
@@ -137,7 +139,8 @@ public enum MouseEventSource {
             public Point call(MouseEvent ev1, MouseEvent ev2) {
                 return new Point(ev2.getX() - ev1.getX(), ev2.getY() - ev1.getY());
             }
-        }).subscribeOn(SwingScheduler.getInstance());
+        }).subscribeOn(SwingScheduler.getInstance())
+                .unsubscribeOn(SwingScheduler.getInstance());
     }
 
 }
